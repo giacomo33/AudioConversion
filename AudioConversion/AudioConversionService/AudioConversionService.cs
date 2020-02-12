@@ -161,7 +161,7 @@ namespace AudioConversion.RESTApi.AudioConversion
                 }
 
                 // Setup Arguments
-                arguments = "--cbr -b 24 -h --quiet --strictly-enforce-ISO  --tt CallAudio --ta www.calln.com --tg 101 --ty " + DateTime.UtcNow.Year.ToString() + " \"" + InputFullFilename + "\" \"" + OutputFullFilename + "\"";
+                arguments = "--cbr -b 24 -h --quiet --strictly-enforce-ISO  --tt CallAudio --ta www.test.com --tg 101 --ty " + DateTime.UtcNow.Year.ToString() + " \"" + InputFullFilename + "\" \"" + OutputFullFilename + "\"";
 
                 // Check if running in Docker Container
                 if (InDocker)

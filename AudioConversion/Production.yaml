@@ -22,7 +22,7 @@ spec:
         "beta.kubernetes.io/os": linux
       containers:
       - name: {{ServiceName}}
-        image: productioncallnregistry.azurecr.io/{{ServiceName}}:{{Version}}
+        image: productiontestregistry.azurecr.io/{{ServiceName}}:{{Version}}
         env:
         - name: ASPNETCORE_ENVIRONMENT
           value: {{ASPNETCORE_ENVIRONMENT}}

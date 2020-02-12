@@ -6,7 +6,7 @@ namespace DataMigration
     {
         static void Main(string[] args)
         {
-            // Copy all data from the existing monolithic CallN database table(s) to this microservices isolated database.
+            // Copy all data from the existing monolithic test database table(s) to this microservices isolated database.
             Console.WriteLine("Reading existing database");
 
 
