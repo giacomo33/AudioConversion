@@ -1,0 +1,85 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ServiceName}}
+spec:
+  replicas: 2
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: {{ServiceName}}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+       maxSurge: 0
+       maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: {{ServiceName}}
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: {{ServiceName}}
+        image: productioncallnregistry.azurecr.io/{{ServiceName}}:{{Version}}
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: {{ASPNETCORE_ENVIRONMENT}}
+        resources:
+          requests:
+            cpu: 0.1
+            memory: 125Mi
+          limits:
+            cpu: 0.4
+            memory: 250Mi
+        ports:
+        - containerPort: 80
+          name: {{ServiceName}}
+        readinessProbe:
+          httpGet:
+            path: {{HealthCheckUrlPath}}
+            port: 80
+          initialDelaySeconds: 10
+          timeoutSeconds: 30
+          periodSeconds: 60
+        livenessProbe:
+          httpGet:
+            path: {{HealthCheckUrlPath}}
+            port: 80
+          initialDelaySeconds: 30
+          timeoutSeconds: 60
+          failureThreshold: 5
+          periodSeconds: 60
+      dnsPolicy: "None"
+      dnsConfig:
+         nameservers:
+           - 10.0.0.10
+         searches:
+           - default.svc.cluster.local
+           - svc.cluster.local
+           - cluster.local
+           - ptxxyprayqrupoexvn12jmr1pb.px.internal.cloudapp.net
+         options:
+           - name: ndots
+             value: "2"
+           - name: single-request-reopen
+      imagePullSecrets:
+      - name: {{SecretKey}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ServiceName}}
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  loadBalancerIP: 10.240.0.39
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: {{ServiceName}}
+
+
+  

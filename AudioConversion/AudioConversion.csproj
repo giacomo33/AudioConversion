@@ -1,0 +1,145 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>AudioConversions</AssemblyName>
+    <StartupObject>AudioConversions.Program</StartupObject>
+    <AssemblyVersion>1.2.3.0</AssemblyVersion>
+    <RootNamespace>AudioConversion</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <UserSecretsId>bca5d86a-70ef-469b-86b2-9f2f08707c9c</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Executables\cygwin1.dll" />
+    <None Remove="Executables\lame.exe" />
+    <None Remove="Executables\lame_enc.dll" />
+    <None Remove="Executables\libflac-8.dll" />
+    <None Remove="Executables\libgcc_s_sjlj-1.dll" />
+    <None Remove="Executables\libgomp-1.dll" />
+    <None Remove="Executables\libid3tag-0.dll" />
+    <None Remove="Executables\libogg-0.dll" />
+    <None Remove="Executables\libpng16-16.dll" />
+    <None Remove="Executables\libsox-3.dll" />
+    <None Remove="Executables\libssp-0.dll" />
+    <None Remove="Executables\libvorbis-0.dll" />
+    <None Remove="Executables\libvorbisenc-2.dll" />
+    <None Remove="Executables\libvorbisfile-3.dll" />
+    <None Remove="Executables\libwavpack-1.dll" />
+    <None Remove="Executables\libwinpthread-1.dll" />
+    <None Remove="Executables\mpg123.exe" />
+    <None Remove="Executables\opusdec.exe" />
+    <None Remove="Executables\opusenc.exe" />
+    <None Remove="Executables\opusinfo.exe" />
+    <None Remove="Executables\sox.exe" />
+    <None Remove="Executables\zlib1.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Executables\cygwin1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\lame.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\lame_enc.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\libflac-8.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\libgcc_s_sjlj-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\libgomp-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\libid3tag-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\libogg-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\libpng16-16.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\libsox-3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\libssp-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\libvorbis-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\libvorbisenc-2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\libvorbisfile-3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\libwavpack-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\libwinpthread-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\mpg123.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\opusdec.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\opusenc.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\opusinfo.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\sox.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Executables\zlib1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks" Version="1.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="3.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Network" Version="3.0.1" />
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.System" Version="3.0.3" />
+    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="3.0.0" />
+    <PackageReference Include="Ben.BlockingDetector" Version="0.0.3" />
+    <PackageReference Include="Docker.DotNet" Version="3.125.2" />
+    <PackageReference Include="LinqKit" Version="1.1.17" />
+    <PackageReference Include="LoggingAdvanced.Console" Version="0.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.HealthChecks" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="4.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
+    <PackageReference Include="NReco.Logging.File" Version="1.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc5" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.0.0-rc9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+    <Folder Include="RESTApi\AudioConversion\Models\" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,43 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audioconversion
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: audioconversion
+  template:
+    metadata:
+      labels:
+        app: audioconversion
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: audioconversion
+        image: gmazureacr.azurecr.io/audioconversion:#{Release.Artifacts.AudioConversion.BuildId}#
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+          name: audioconversion
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: audioconversion
+  annotations: 
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: audioconversion

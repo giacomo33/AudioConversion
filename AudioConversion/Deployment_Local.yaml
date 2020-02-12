@@ -1,0 +1,22 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audioconversion-node 
+  labels:
+    app: audioconversion
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: audioconversion
+  template:
+    metadata:
+      labels:
+        app: audioconversion
+    spec:
+      containers:
+      - name: audioconversion
+        image: giacomo33/audioconversion_web:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
