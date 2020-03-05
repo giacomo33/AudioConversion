@@ -29,6 +29,7 @@ namespace AudioConversion.RESTApi.AudioConversion
         void RedactWavAudio(string InputFullFilename, string OutputFullFilename, long lStartTimeOffsetMilliseconds, long lRedactionLengthMilliseconds);
         void WavFileExtract(string InputFullFilename, string OutputFullFilename, TimeSpan tStartTimeOffset, TimeSpan tDuration);
         void CreateStereoWavFile(string LeftChannelFilename, string RightChannelFilename, string OutputFullFilename, bool AlsoTrimSilence);
+        void ConvertWavToFlac(string InputFullFilename, string OutputFullFilename, int channelCount);
     }
 
     public class AudioConversionService : IAudioConversionService
@@ -681,6 +682,72 @@ namespace AudioConversion.RESTApi.AudioConversion
             catch (Exception Ex)
             {
                 _logger.LogInformation($"ConvertOpusToWav Exception {Ex.Message}");
+                throw;
+            }
+        }
+
+        public void ConvertWavToFlac(string InputFullFilename, string OutputFullFilename, int channelCount)
+        {
+
+            DateTime BeginTimeUTC = DateTime.UtcNow;
+            string arguments = string.Empty;
+
+            try
+            {
+
+                var oHeader = new WavHeaderClass();
+                // Read the header of the input file. So we can check if it is in stereo format.
+                oHeader.Load(InputFullFilename);
+
+                // Check Input file exists
+                if (System.IO.File.Exists(InputFullFilename) == false)
+                    throw new Exception("input file '" + InputFullFilename + "' was not created successfully");
+
+                // Delete any pre-existing output file.
+                if (System.IO.File.Exists(OutputFullFilename) == true)
+                {
+                    System.IO.File.SetAttributes(OutputFullFilename, System.IO.FileAttributes.Normal);
+                    System.IO.File.Delete(OutputFullFilename);
+                }
+
+                // Setup Arguments
+                if (channelCount == 2)
+                {
+                    arguments = " -t wav \"" + InputFullFilename + "\" -t flac -r 8000 -b 16 -c 2  \"" + OutputFullFilename + "\"";
+                }
+                else if (channelCount == 1)
+                {
+                    arguments = " -t wav \"" + InputFullFilename + "\" -t flac -r 8000 -b 16 -c 1  \"" + OutputFullFilename + "\"";
+                }
+                else
+                    throw new Exception("channel count can only be 1 or 2");
+
+                //arguments = " -i \"" + InputFullFilename + "\"  \"" + OutputFullFilename + "\"";
+
+
+                // Check if running in Docker Container
+                if (InDocker)
+                {
+                    ShellHelper.ExecBashProcess("sox", arguments, _logger);
+                }
+                else
+                {
+                    ShellHelper.ExecWindowsProcess(CURRENTAPPLICATIONPATH + @"\Executables\sox.exe", arguments);
+                }
+
+
+                // Throw an exception, if no output file was created.
+                if (System.IO.File.Exists(OutputFullFilename) == false)
+                    throw new Exception("output file '" + OutputFullFilename + "' was not created successfully");
+
+                // The audio file was converted successfully.
+                _logger.LogInformation($"ConvertMP3ToWav .Converted file '" + InputFullFilename + "' to '" + OutputFullFilename + "' successfully. (" + (DateTime.UtcNow - BeginTimeUTC).TotalMilliseconds.ToString("###,##0") + " ms)");
+
+                return;
+            }
+            catch (Exception Ex)
+            {
+                _logger.LogInformation($"ConvertMP3ToWav Exception {Ex.Message}");
                 throw;
             }
         }

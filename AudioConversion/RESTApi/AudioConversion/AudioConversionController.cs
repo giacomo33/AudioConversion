@@ -39,11 +39,14 @@ namespace AudioConversion.RESTApi.AudioConversion
         /// <response code="200">OK</response>
         /// <response code="404">Not Found</response>            
         /// <response code="500">Internal Server Error</response>            
-        [HttpPost("wav-converter")]
+        [HttpPost("convert-wav")]
+        [BinaryContent]
         [DisableFormValueModelBinding]
-        [Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
+        //[Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
+        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
+        [Produces("audio/wav")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PhysicalFileResult))]
+        [RequestSizeLimit(1000000000000)]
         public async Task<ActionResult> WavConverter(string inputFormat, int sampleRate, int bitDepth, int channels)
         {
             // Specify paths.
@@ -52,10 +55,9 @@ namespace AudioConversion.RESTApi.AudioConversion
 
             try
             {
-                FormValueProvider formModel;
                 using (var stream = System.IO.File.Create(sTempLocalFileName))
                 {
-                    formModel = await Request.StreamFile(stream);
+                    await Request.Body.CopyToAsync(stream);
                 }
                 // Return the record.
                 _audioconversionservice.WavConverter(sTempLocalFileName, sTempFinalLocalFileName, inputFormat, sampleRate, bitDepth, channels);
@@ -82,10 +84,14 @@ namespace AudioConversion.RESTApi.AudioConversion
         /// <response code="404">Not Found</response>            
         /// <response code="500">Internal Server Error</response>            
         [HttpPost("convert-mp3-wav")]
+        [Produces("audio/wav")]
+        [BinaryContent]
         [DisableFormValueModelBinding]
-        [Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
+        //[Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
+        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PhysicalFileResult))]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
+        [RequestSizeLimit(1000000000000)]
         public async Task<ActionResult> ConvertMP3ToWav(int sampleRate)
         {
             // Specify paths.
@@ -94,10 +100,9 @@ namespace AudioConversion.RESTApi.AudioConversion
 
             try
             {
-                FormValueProvider formModel;
                 using (var stream = System.IO.File.Create(sTempLocalFileName))
                 {
-                    formModel = await Request.StreamFile(stream);
+                    await Request.Body.CopyToAsync(stream);
                 }
                 // Return the record.
                 _audioconversionservice.ConvertMP3ToWav(sTempLocalFileName, sTempFinalLocalFileName, sampleRate);
@@ -124,12 +129,16 @@ namespace AudioConversion.RESTApi.AudioConversion
         /// <response code="200">OK</response>
         /// <response code="404">Not Found</response>            
         /// <response code="500">Internal Server Error</response>            
-        [HttpPost("swap-audio-channel")]
+        [HttpPost("swap-audio-channel-wav")]
+        [Produces("audio/wav")]
+        [BinaryContent]
         [DisableFormValueModelBinding]
-        [Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
-        public async Task<ActionResult> SwapAudioChannel(int sampleRate, string contentType)
+        //[Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
+        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PhysicalFileResult))]
+        [RequestSizeLimit(1000000000000)]
+        public async Task<ActionResult> SwapAudioChannel(int sampleRate)
         {
             // Specify paths.
             string sTempLocalFileName = Utilities.GetTempFilenameSafe(".wav");
@@ -137,15 +146,14 @@ namespace AudioConversion.RESTApi.AudioConversion
 
             try
             {
-                FormValueProvider formModel;
                 using (var stream = System.IO.File.Create(sTempLocalFileName))
                 {
-                    formModel = await Request.StreamFile(stream);
+                    await Request.Body.CopyToAsync(stream);
                 }
                 // Return the record.
                 _audioconversionservice.SwapAudioChannel(sTempLocalFileName, sTempFinalLocalFileName, sampleRate);
 
-                return new TempPhysicalFileResult(sTempFinalLocalFileName, contentType) { FileDownloadName = Path.GetFileName(sTempFinalLocalFileName) };
+                return new TempPhysicalFileResult(sTempFinalLocalFileName, "audio/wav") { FileDownloadName = Path.GetFileName(sTempFinalLocalFileName) };
             }
             finally
             {
@@ -167,12 +175,16 @@ namespace AudioConversion.RESTApi.AudioConversion
         /// <response code="200">OK</response>
         /// <response code="404">Not Found</response>            
         /// <response code="500">Internal Server Error</response>            
-        [HttpPost("create-mp3-from-wav")]
+        [HttpPost("convert-wav-mp3")]
+        [Produces("audio/mpeg")]
+        [BinaryContent]
         [DisableFormValueModelBinding]
-        [Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
-        public async Task<ActionResult> CreateMP3FromWav(int sampleRate, string contentType)
+        //[Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
+        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PhysicalFileResult))]
+        [RequestSizeLimit(1000000000000)]
+        public async Task<ActionResult> CreateMP3FromWav(int sampleRate)
         {
             // Specify paths.
             string sTempLocalFileName = Utilities.GetTempFilenameSafe(".wav");
@@ -180,15 +192,14 @@ namespace AudioConversion.RESTApi.AudioConversion
 
             try
             {
-                FormValueProvider formModel;
                 using (var stream = System.IO.File.Create(sTempLocalFileName))
                 {
-                    formModel = await Request.StreamFile(stream);
+                    await Request.Body.CopyToAsync(stream);
                 }
                 // Return the record.
                 _audioconversionservice.CreateMP3FromWav(sTempLocalFileName, sTempFinalLocalFileName);
 
-                return new TempPhysicalFileResult(sTempFinalLocalFileName, contentType) { FileDownloadName = Path.GetFileName(sTempFinalLocalFileName) };
+                return new TempPhysicalFileResult(sTempFinalLocalFileName, "audio/mpeg") { FileDownloadName = Path.GetFileName(sTempFinalLocalFileName) };
             }
             finally
             {
@@ -210,11 +221,15 @@ namespace AudioConversion.RESTApi.AudioConversion
         /// <response code="200">OK</response>
         /// <response code="404">Not Found</response>            
         /// <response code="500">Internal Server Error</response>            
-        [HttpPost("redact-wav")]
+        [HttpPost("transform-wav")]
+        [Produces("audio/wav")]
+        [BinaryContent]
         [DisableFormValueModelBinding]
-        [Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
+        //[Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
+        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PhysicalFileResult))]
+        [RequestSizeLimit(1000000000000)]
         public async Task<ActionResult> RedactWavAudio(long lStartTimeOffsetMilliseconds, long lRedactionLengthMilliseconds)
         {
             // Specify paths.
@@ -223,10 +238,9 @@ namespace AudioConversion.RESTApi.AudioConversion
 
             try
             {
-                FormValueProvider formModel;
                 using (var stream = System.IO.File.Create(sTempLocalFileName))
                 {
-                    formModel = await Request.StreamFile(stream);
+                    await Request.Body.CopyToAsync(stream);
                 }
                 // Return the record.
                 _audioconversionservice.RedactWavAudio(sTempLocalFileName, sTempFinalLocalFileName, lStartTimeOffsetMilliseconds, lRedactionLengthMilliseconds);
@@ -253,10 +267,14 @@ namespace AudioConversion.RESTApi.AudioConversion
         /// <response code="404">Not Found</response>            
         /// <response code="500">Internal Server Error</response>            
         [HttpPost("extract-one-channel-wav")]
+        [Produces("audio/wav")]
+        [BinaryContent]
         [DisableFormValueModelBinding]
-        [Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
+        //[Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
+        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PhysicalFileResult))]
+        [RequestSizeLimit(1000000000000)]
         public async Task<ActionResult> ExtractOneChannelToWav(bool leftChannel)
         {
             // Specify paths.
@@ -265,10 +283,9 @@ namespace AudioConversion.RESTApi.AudioConversion
 
             try
             {
-                FormValueProvider formModel;
                 using (var stream = System.IO.File.Create(sTempLocalFileName))
                 {
-                    formModel = await Request.StreamFile(stream);
+                    await Request.Body.CopyToAsync(stream);
                 }
                 // Return the record.
                 _audioconversionservice.ExtractOneChannelToWav(sTempLocalFileName, sTempFinalLocalFileName, leftChannel);
@@ -295,10 +312,14 @@ namespace AudioConversion.RESTApi.AudioConversion
         /// <response code="404">Not Found</response>            
         /// <response code="500">Internal Server Error</response>            
         [HttpPost("convert-opus-wav")]
+        [Produces("audio/wav")]
+        [BinaryContent]
         [DisableFormValueModelBinding]
-        [Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
+        //[Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
+        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PhysicalFileResult))]
+        [RequestSizeLimit(1000000000000)]
         public async Task<ActionResult> ConvertOpusToWav(int sampleRate)
         {
             // Specify paths.
@@ -307,10 +328,9 @@ namespace AudioConversion.RESTApi.AudioConversion
 
             try
             {
-                FormValueProvider formModel;
                 using (var stream = System.IO.File.Create(sTempLocalFileName))
                 {
-                    formModel = await Request.StreamFile(stream);
+                    await Request.Body.CopyToAsync(stream);
                 }
                 // Return the record.
                 _audioconversionservice.ConvertOpusToWav(sTempLocalFileName, sTempFinalLocalFileName, sampleRate);
@@ -322,6 +342,52 @@ namespace AudioConversion.RESTApi.AudioConversion
                 // Delete the initial streamed file
                 if (System.IO.File.Exists(sTempLocalFileName))
                     System.IO.File.Delete(sTempLocalFileName);
+            }
+
+        }
+
+        /// <summary>
+        /// Converts an audio file from opus to wav
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <param name="channelCount">The channel count of the audio. Must be 1 or 2.</param>
+        /// <returns>A stream of the audio</returns>
+        /// <response code="200">OK</response>
+        /// <response code="404">Not Found</response>            
+        /// <response code="500">Internal Server Error</response>            
+        [HttpPost("convert-wav-flac")]
+        [Produces("audio/wav")]
+        [BinaryContent]
+        [DisableFormValueModelBinding]
+        //[Consumes("multipart/form-data")] // You can specify consumes here and it gets automatically added also to swagger
+        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(Stream))]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PhysicalFileResult))]
+        [RequestSizeLimit(1000000000000)]
+        public async Task<ActionResult> ConvertWavToFlac(int channelCount)
+        {
+            // Specify paths.
+            string sTempLocalFileName = Utilities.GetTempFilenameSafe(".wav");
+            string sTempFinalLocalFileName = Utilities.GetTempFilenameSafe(".flac");
+
+            try
+            {
+                using (var stream = System.IO.File.Create(sTempLocalFileName))
+                {
+                    await Request.Body.CopyToAsync(stream);
+                }
+
+                // Return the record.
+                _audioconversionservice.ConvertWavToFlac(sTempLocalFileName, sTempFinalLocalFileName, channelCount);
+
+                return new TempPhysicalFileResult(sTempFinalLocalFileName, "audio/flac") { FileDownloadName = Path.GetFileName(sTempFinalLocalFileName) };
+            }
+            finally
+            {
+                // Delete the initial streamed file
+                //if (System.IO.File.Exists(sTempLocalFileName))
+                //    System.IO.File.Delete(sTempLocalFileName);
             }
 
         }

@@ -121,7 +121,7 @@ namespace AudioConversions
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = _configuration.GetValue<string>("Application:Name") + " REST api", Version = "v1" });
 
                 // Add Operation Filter
-                c.OperationFilter<SwaggerUploadFileParametersFilter>();
+                c.OperationFilter<BinaryContentFilter>();
 
                 // Add examples.
                 c.ExampleFilters();
