@@ -169,8 +169,7 @@ namespace AudioConversion.RESTApi.AudioConversion
         /// </summary>
         /// <remarks>
         /// </remarks>
-        /// <param name="sampleRate">The sample rate of the audio</param>
-        /// <param name="contentType">The content type of the download. Values can be audio/mpeg, audio/mpeg3, audio/x-mpeg-3</param>
+        /// <param name="MP3Title">The MP3 title</param>
         /// <returns>A stream of the audio</returns>
         /// <response code="200">OK</response>
         /// <response code="404">Not Found</response>            
@@ -184,7 +183,7 @@ namespace AudioConversion.RESTApi.AudioConversion
         //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Stream))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PhysicalFileResult))]
         [RequestSizeLimit(1000000000000)]
-        public async Task<ActionResult> CreateMP3FromWav(int sampleRate)
+        public async Task<ActionResult> CreateMP3FromWav(string MP3Title)
         {
             // Specify paths.
             string sTempLocalFileName = Utilities.GetTempFilenameSafe(".wav");
@@ -197,7 +196,7 @@ namespace AudioConversion.RESTApi.AudioConversion
                     await Request.Body.CopyToAsync(stream);
                 }
                 // Return the record.
-                _audioconversionservice.CreateMP3FromWav(sTempLocalFileName, sTempFinalLocalFileName);
+                _audioconversionservice.CreateMP3FromWav(sTempLocalFileName, sTempFinalLocalFileName, MP3Title);
 
                 return new TempPhysicalFileResult(sTempFinalLocalFileName, "audio/mpeg") { FileDownloadName = Path.GetFileName(sTempFinalLocalFileName) };
             }
@@ -378,7 +377,6 @@ namespace AudioConversion.RESTApi.AudioConversion
                     await Request.Body.CopyToAsync(stream);
                 }
 
-                // Return the record.
                 _audioconversionservice.ConvertWavToFlac(sTempLocalFileName, sTempFinalLocalFileName, channelCount);
 
                 return new TempPhysicalFileResult(sTempFinalLocalFileName, "audio/flac") { FileDownloadName = Path.GetFileName(sTempFinalLocalFileName) };
@@ -386,8 +384,8 @@ namespace AudioConversion.RESTApi.AudioConversion
             finally
             {
                 // Delete the initial streamed file
-                //if (System.IO.File.Exists(sTempLocalFileName))
-                //    System.IO.File.Delete(sTempLocalFileName);
+                if (System.IO.File.Exists(sTempLocalFileName))
+                    System.IO.File.Delete(sTempLocalFileName);
             }
 
         }

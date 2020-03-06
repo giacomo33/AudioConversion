@@ -25,7 +25,7 @@ namespace AudioConversion.RESTApi.AudioConversion
         void ConvertOpusToWav(string InputFullFilename, string OutputFullFilename, int sampleRate);
         void SwapAudioChannel(string InputFullFilename, string OutputFullFilename, int sampleRate);
         void ExtractOneChannelToWav(string InputFullFilename, string OutputFullFilename, bool leftChannel);
-        void CreateMP3FromWav(string InputFullFilename, string OutputFullFilename);
+        void CreateMP3FromWav(string InputFullFilename, string OutputFullFilename, string MP3Title);
         void RedactWavAudio(string InputFullFilename, string OutputFullFilename, long lStartTimeOffsetMilliseconds, long lRedactionLengthMilliseconds);
         void WavFileExtract(string InputFullFilename, string OutputFullFilename, TimeSpan tStartTimeOffset, TimeSpan tDuration);
         void CreateStereoWavFile(string LeftChannelFilename, string RightChannelFilename, string OutputFullFilename, bool AlsoTrimSilence);
@@ -145,7 +145,7 @@ namespace AudioConversion.RESTApi.AudioConversion
             }
         }
 
-        public void CreateMP3FromWav(string InputFullFilename, string OutputFullFilename)
+        public void CreateMP3FromWav(string InputFullFilename, string OutputFullFilename, string MP3Title)
         {
             DateTime BeginTimeUTC = DateTime.UtcNow;
             string arguments = string.Empty;
@@ -164,7 +164,7 @@ namespace AudioConversion.RESTApi.AudioConversion
                 }
 
                 // Setup Arguments
-                arguments = "--cbr -b 24 -h --quiet --strictly-enforce-ISO  --tt CallAudio --ta www.calln.com --tg 101 --ty " + DateTime.UtcNow.Year.ToString() + " \"" + InputFullFilename + "\" \"" + OutputFullFilename + "\"";
+                arguments = "--cbr -b 24 -h --quiet --strictly-enforce-ISO  --tt " + " \"" + MP3Title + " \"" + " --ta www.calln.com --tg 101 --ty " + DateTime.UtcNow.Year.ToString() + " \"" + InputFullFilename + "\" \"" + OutputFullFilename + "\"";
 
                 // Check if running in Docker Container
                 if (InDocker)
@@ -694,11 +694,6 @@ namespace AudioConversion.RESTApi.AudioConversion
 
             try
             {
-
-                var oHeader = new WavHeaderClass();
-                // Read the header of the input file. So we can check if it is in stereo format.
-                oHeader.Load(InputFullFilename);
-
                 // Check Input file exists
                 if (System.IO.File.Exists(InputFullFilename) == false)
                     throw new Exception("input file '" + InputFullFilename + "' was not created successfully");
@@ -722,7 +717,6 @@ namespace AudioConversion.RESTApi.AudioConversion
                 else
                     throw new Exception("channel count can only be 1 or 2");
 
-                //arguments = " -i \"" + InputFullFilename + "\"  \"" + OutputFullFilename + "\"";
 
 
                 // Check if running in Docker Container

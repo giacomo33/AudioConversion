@@ -19,4 +19,4 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "AudioConversions.dll"]
 
-RUN apt-get update && apt-get install -y mpg123 && apt-get install -y sox && apt-get install -y lame && apt-get install -y ffmpeg
+RUN apt-get update && apt-get install -y mpg123 && apt-get install -y sox && apt-get install -y lame
