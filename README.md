@@ -16,6 +16,8 @@ Project illustrates some best pratices implementation:
 .NET Core
 Swagger
 Application Insights
+Docker
+Kubernetes
 
 
 
