@@ -12,4 +12,10 @@ Project illustrates some best pratices implementation:
 7.  Background Service implementation for potential long running tasks
 8.  Naming conventions used 
 
+### Technology Stack used
+.NET Core
+Swagger
+Application Insights
+
+
 
