@@ -13,11 +13,11 @@ Project illustrates some best pratices implementation:
 8.  Naming conventions used 
 
 ### Technology Stack used
-.NET Core
-Swagger
-Application Insights
-Docker
-Kubernetes
+- .NET Core
+- Swagger
+- Application Insights
+- Docker
+- Kubernetes
 
 
 
